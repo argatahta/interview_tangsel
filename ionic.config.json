@@ -2,5 +2,12 @@
   "name": "natieva",
   "app_id": "",
   "type": "ionic-angular",
-  "integrations": {}
+  "proxies": [{
+    "path":"/api",
+    "proxyUrl": "http://wiztalk.co/api/vendor/listproduct"
+  }],
+  "integrations": {
+    "cordova": {}
+  }
+  
 }

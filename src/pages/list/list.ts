@@ -1,37 +1,45 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
+import { Http, RequestOptions, Headers } from "@angular/http";
 import { NavController, NavParams } from 'ionic-angular';
+import { DetailPage } from '../detail/detail'
+
 
 @Component({
   selector: 'page-list',
   templateUrl: 'list.html'
 })
-export class ListPage {
+export class ListPage  {
   selectedItem: any;
   icons: string[];
-  items: Array<{title: string, note: string, icon: string}>;
+  items: Array<{ title: string, note: string, icon: string }>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    // If we navigated to this page, we will have an item available as a nav param
-    this.selectedItem = navParams.get('item');
+  products = []
 
-    // Let's populate this page with some filler content for funzies
-    this.icons = ['flask', 'wifi', 'beer', 'football', 'basketball', 'paper-plane',
-    'american-football', 'boat', 'bluetooth', 'build'];
-
-    this.items = [];
-    for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
+  constructor(public navCtrl: NavController, public navParams: NavParams, private http: Http) {
+    this.loadProduct();
   }
+
+
+  loadProduct() {
+
+    let header = new Headers({ "Authorization": "Bearer " + "$2y$10$zlwCGDlNG9oYMg9WMj03gu.cEFx4djrktLLqL3t5BaqRrJFGqybNa"});
+    let options = new RequestOptions({ headers: header });
+
+    this.http.get('http://wiztalk.co/api/vendor/listproduct', options)
+    .subscribe(
+    result => {
+      console.log(result.json());
+      this.products = result.json();
+    },
+    error => {
+      console.log(error)
+    }
+    )
+  }
+
 
   itemTapped(event, item) {
     // That's right, we're pushing to ourselves!
-    this.navCtrl.push(ListPage, {
-      item: item
-    });
+    this.navCtrl.push(DetailPage, item);
   }
 }
